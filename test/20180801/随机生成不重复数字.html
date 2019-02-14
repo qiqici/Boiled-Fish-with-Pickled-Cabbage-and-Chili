@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+<script>
+	var arr1=["../../2/1.png","../../2/2.png","../../2/3.png","../../2/4.png","../../2/5.png","../../2/6.png","../../2/7.png","../../2/8.png","../../2/9.png","../../2/10.png"];
+	var arr2=new Array();
+	for(var k=0;k<10;k++){
+		var i=parseInt(Math.random()*10);
+		if(arr2.indexOf(arr1[i])===-1){
+			arr2.push(arr1[i]);
+		}else{
+			k=k-1;
+			continue;
+		}
+	}
+	console.log(arr2);
+</script>
+</body>
+</html>

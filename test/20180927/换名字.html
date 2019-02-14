@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+
+<script>
+	var xianshi=5;
+
+	var arr=[1,2,3,4,5];//接口给的
+
+	var newArr=["one","two","three","four","five"];//需要转换的
+
+	for(var i in arr){
+		for(var j in newArr){
+			if(arr[i]==xianshi){
+				xianshi=newArr[i];
+				console.log(xianshi);
+			}
+		}
+		
+	}
+
+</script>
+
+<script src="../jquery.js"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+	<!-- jasmine茉莉花 -->
+
+<a href="#" onclick="get1()">发生get1请求</a>
+
+<script>
+	function get1(){
+		$.getJSON("http://localhost:8080/test/get1").then(function(result){
+			console.log(result);
+		})
+	}
+
+为什么会发生AJAX跨域？
+浏览器限制
+跨域（域名，协议名）
+XHR（XMLHttpRequest）请求
+</script>
+</body>
+</html>

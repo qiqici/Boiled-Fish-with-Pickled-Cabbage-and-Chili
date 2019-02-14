@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="../swiper.min.css">
+</head>
+<style>
+	*{
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.news {
+	  height: 30px;
+	  background-color: #fff;
+	  margin: 0 10px;
+	  border-radius: 5px;
+	  position: relative;
+	  line-height: 30px;
+	  overflow: hidden;
+	}
+	.news .info {
+	  margin: 0 40px 0 82px;
+	  height: 30px;
+	}
+	.news .info li {
+	  padding:0 10px;
+	  height: 30px;
+	}
+</style>
+<body>
+<div class="news">
+    <div class="info">
+      <ul>
+        <li class="one-txt-cut"><a href="#">11111111111</a></li>
+        <li class="one-txt-cut"><a href="#">22222222222</a></li>
+        <li class="one-txt-cut"><a href="#">33333333333</a></li>
+        <li class="one-txt-cut"><a href="#">44444444444</a></li>
+        <li class="one-txt-cut"><a href="#">55555555555</a></li>
+        <li class="one-txt-cut"><a href="#">11111111111</a></li>
+      </ul>
+    </div>
+  </div>
+<script>
+;(function () {
+  var ul = document.querySelector(".news .info ul");
+  var lis = ul.children;
+  var liHeight = lis[0].offsetHeight;
+  var index = 0;
+  setInterval(function () {
+    if (index >= lis.length - 1) {
+      index = 0;
+      ul.style.transition = "none";
+      ul.style.webkitTransition = "none";
+      ul.style.transform = "translateY(0px)";
+      ul.style.webkitTransform = "translateY(0px)";
+    }
+    ul.offsetLeft;
+    index++;
+    ul.style.transition = "all .5s";
+    ul.style.webkitTransition = "all .5s";
+    ul.style.transform = "translateY(-" + liHeight * index + "px)";
+    ul.style.webkitTransform = "translateY(-" + liHeight * index + "px)";
+  }, 2000);
+})();
+</script>
+<script src="../jquery.js"></script>
+<!-- <script src="../swiper.min.js"></script> -->
+</body>
+</html>

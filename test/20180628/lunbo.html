@@ -1,0 +1,47 @@
+<meta charset="utf-8"/>
+<script type="text/javascript" src="http://www.php100.com/manual/jquery/js/jquery-2.1.4.min.js"></script>
+<script type="text/javascript">
+// 滚动
+    function autoScroll(){
+        var news = $("#news"), 
+            pop = $("#pop");
+        if(pop.html() !== "") {
+            var html2 = "<ul>" + pop.html() + "</ul>";
+            news.find("ul").eq(0).siblings().remove();
+            news.append(html2);
+        }
+        var index = 0;
+        var t=setInterval(function() {
+            if(news.scrollTop() < $("#pop").height()) {
+                index ++;
+                news.scrollTop(index);
+            } else {
+                news.scrollTop(0);
+                index = 0;
+            }
+        },50);     
+    }
+    $(function(){
+    autoScroll();
+    });
+</script>
+    <div id="news">
+        <ul id="pop">
+        <li>1111111111111111</li>
+        <li>2222222222222222</li>
+        <li>3333333333333333</li>
+        <li>4444444444444444</li>
+    </ul>
+    </div>
+    <style type="text/css">
+     #news{
+     		  border:1px red solid;
+		      position: relative;
+		      width:346px;
+		      height:30px;
+		      overflow: hidden;
+		      font-size: 14px;
+		      color:#000; 
+		      line-height: 26px;
+		  }
+     </style>

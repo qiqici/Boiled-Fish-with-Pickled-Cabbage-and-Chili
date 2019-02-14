@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.0 ,user-scalable=no"> 
+     
+    <script src="../jquery.js"></script>
+    <style>
+      *{
+        margin: 0;
+        padding: 0;
+      }
+      .navScroll{
+        position: relative;
+      }
+      #overflow{      
+        width: 100%;
+        height: 30px;
+        overflow-x: scroll;
+      }  
+      #overflow .container{
+        height: 30px;
+      }
+      #overflow .container div{
+        float: left;
+        width: 100px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+      }
+      #overflow::-webkit-scrollbar {
+        display: none;
+        -webkit-overflow-scrolling: touch;
+      }  
+      .navScroll .drop_down{
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 50px;
+        height: 30px;
+      }
+      .navScroll .drop_down img{
+        width: 100%;
+        height: 100%;
+      }
+      .tabUl.clearFix{
+        display: none; 
+        width: 100%;
+        list-style: none;
+        z-index: 10;
+        background: rgba(0,0,0,.1);
+      }
+      .tabUl li{
+        float: left;
+        width: 6.25rem;
+        height: 2.65625rem;
+        line-height: 2.65625rem;;
+        text-align: center;
+      }
+      .clearFix{
+        content: "";
+        display: table;
+        clear: both;
+      }
+      div, ul{
+        color: #89CFE8;
+      }
+       
+      #overflow .container div.lastWidth{
+        width: 50px;
+      }
+      .red{
+        color: #FF9933;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="navScroll">
+      <div id="overflow"> 
+        <div class="container"> 
+          <div class="tabItem red">
+            item1 
+          </div> 
+          <div class="tabItem">
+            item2
+          </div> 
+          <div class="tabItem">
+            item3 
+          </div> 
+          <div class="tabItem">
+            item4
+          </div> 
+          <div class="tabItem">
+            item5 
+          </div> 
+          <div class="tabItem">
+            item6
+          </div> 
+          <div class="tabItem">
+            item7 
+          </div> 
+          <div class="tabItem">
+            item8
+          </div> 
+          <div class="tabItem">
+            item9
+          </div> 
+          <div class="tabItem">
+            item10 
+          </div> 
+          <div class="tabItem">
+            item11 
+          </div> 
+          <div class="lastWidth"></div>
+        </div> 
+      </div> 
+      <div class="drop_down">
+        <img src="./1.jpg" drop="down" alt="" />
+      </div>
+      <ul class="tabUl clearFix">
+        <li class="red">item1</li>
+        <li >item2</li>
+        <li >item3</li>
+        <li >item4</li>
+        <li >item5</li>
+        <li >item6</li>
+        <li >item7</li>
+        <li >item8</li>
+        <li >item9</li>
+        <li >item10</li>
+        <li >item11</li>
+         
+      </ul>
+    </div>
+  </body>
+  <script>
+    var width = 0;
+    $('#overflow .container div').each(function () { 
+      width += $(this).outerWidth(true); 
+    }); 
+    $('#overflow .container').css('width', width + "px"); 
+    var flag = true;
+    $(".drop_down img").click(function(e){ //箭头符号的变化
+      if(flag){
+        $(".drop_down img").attr("src","./1.jpg");
+        $(".tabUl").css("display","block")
+        flag = false; 
+      }else{
+        $(".drop_down img").attr("src","./1.jpg");
+        $(".tabUl").css("display","none")
+        flag = true;
+      }
+    });
+    var ulHeight= Math.ceil(($(".tabUl li").length-1)/6)*2.65625 +"rem";
+    $(".navScroll .tabUl").css("height",ulHeight)
+    $(".navScroll").on("click",".tabItem",function(e,index){ //滑动栏点击样式      
+      var $this=$(this);
+      $(".tabItem").css({"color": "#89CFE8"})
+      $($this).css({"color": "#FF9933"});
+      var items = $($this)[0];
+      var ulIndx;
+      $(".tabItem").each(function(i,n){
+        if(n==items){
+          ulIndx = i;
+        }
+      })  
+      $(".tabUl li").css({"color": "#89CFE8"});
+      var ulItems = $(".tabUl li")[ulIndx];
+      $(ulItems).css({"color": "#FF9933"});
+      moveNav(ulIndx);
+    })    
+    $(".navScroll").on("click","li",function(e,index){ //下拉点击样式      
+      var $this=$(this);
+      $("li").css({"color": "#89CFE8"})
+      $($this).css({"color": "#FF9933"});
+      var items = $($this)[0];
+      var ulIndx;
+      $("li").each(function(i,n){
+        if(n==items){
+          ulIndx = i;
+        }
+      })  
+      $(".tabItem").css({"color": "#89CFE8"});
+      var ulItems = $(".tabItem")[ulIndx];
+      $(ulItems).css({"color": "#FF9933"});
+      $(".drop_down img").attr("src","./1.jpg");
+      $(".tabUl").css("display","none")
+      flag = true;
+      moveNav(ulIndx);
+    })  
+    function moveNav(index){ //滑动栏移动效果
+      var allImg = $(".navScroll").find(".tabItem");
+      var navImgWidth = allImg.width();
+      var lastWidth = $(".container .lastWidth").width();
+      var windowWidth = $(window).width();
+      var navBox = $("#overflow");
+      if(navImgWidth*(index+1) >=windowWidth-navImgWidth){
+        if(navImgWidth*(index+1)<navImgWidth*(allImg.length+1)+lastWidth-windowWidth){
+          navBox.animate({scrollLeft:navImgWidth*(index-1)},500);
+        }else{
+          navBox.animate({scrollLeft:navImgWidth*(allImg.length+1)+lastWidth-windowWidth},500);
+        }
+      }else{
+        navBox.animate({scrollLeft:'0px'},1000);
+      }
+    }
+  </script>
+</html>

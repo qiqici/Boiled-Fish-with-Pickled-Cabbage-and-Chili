@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+
+<!-- 弹框 -->
+<div style="position:fixed;left:0;top:0;width:100%;height:100%" v-show="ifcontainer2">
+    <div style="width:80%;margin:50% auto;">
+        <div style="width:100%;position: relative;">
+            <img src="${resRoot}/images/flow-wallet/tc-icon_03.png" width="100%"/>
+            <img v-on:click="close" style="position: absolute;width: 1rem;top: 34px;right: 6px;" src="${resRoot}/images/Flow_Purse/closeicon.png">
+            <div class="textinner" style="background: #fff;margin-top: -10px;border: 1px solid transparent;border-bottom-left-radius: 3px;border-bottom-right-radius: 3px;">
+                <div class="text" style="text-align: center;color: #999;font-size: 14px;padding: 2rem 0rem;" v-html="container2inner">
+
+                </div>
+                <div class="innerbtns" style="display: flex;justify-content: space-around">
+                    <div v-on:click="toshare" id="sharebtn" class="innerbtn1" style="text-align: center;color: #ff6600;border: 1px solid #ff6600;width: 34%;padding: 7px 6px;font-size: 14px;margin-bottom: 36px">
+                        分享再玩
+                    </div>
+                    <div v-on:click="toshop" class="innerbtn2" style="text-align: center;color: #ff6600;border: 1px solid #ff6600;width: 34%;padding: 7px 6px;font-size: 14px;margin-bottom: 36px;background: #ff6600;color: #fff;">
+                        0.1元再玩
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 加载中 -->
+<div style="display:none;width:100%;height:100%;background:rgba(0,0,0,0.6);position:fixed;top:0;left:0;z-index:9999"  v-show="istccshowsev">
+    <div style="width:80%;margin:40% auto 10px;text-align:center;" >
+        <img src="../images/index_copy/loading2.gif" width="30%" />
+    </div>
+    <div style="width=100%;text-align:center;line-height:1.5rem;color:white;">加载中....</div>
+</div>
+
+
+ <script>
+ 
+ // 微信分享
+sharewx:function(){
+    Net.httpPost("/wxCard/getJsApiConfig", JSON.stringify({url: window.location.href}), ajaxOptions).then(res => {
+        var config = res.object;
+    var config = res.object;
+    wx.config(config);
+    wx.error(function (res) {
+
+    });
+
+    wx.ready(function () {
+        wx.showOptionMenu();
+        var obj = {
+            title: '【小流量博大奖】热skr人了！快来抽一波“降温”福利吧！',
+            desc: '特权中心专享活动~',
+            link: 'https://qy.chinaunicom.cn/mobile-h5/Flow_Purse/Flow_turntable.html',
+            imgUrl: 'http://qy.chinaunicom.cn/mobile-h5/images/Flow_Purse/truntable.png',
+            fail: function (res) {
+            },
+            success:function(){
+                console.log("分享成功");
+                console.log(res);
+                rootVM.ifshare = false;
+                var params = {actId:'1000000000000001'};
+                //todo分享成功后操作
+                Net.httpGet('sharecount/shareCircle',params)
+                    .then(function(data) {
+
+                    }).catch(function() {
+                    rootVM.ifcontainer3 = true;
+                    rootVM.container3inner = "抱歉，网络太火爆了，请稍后再试o(╥﹏╥)o";
+                    rootVM.container3btn = "朕知道了";
+                });
+            }
+        };
+        wx.onMenuShareAppMessage(obj);
+        wx.onMenuShareTimeline(obj);
+    });
+});
+},
+
+// 查询是否登陆(在最外面调用 data里面加ifdenglu: 0,//是否登陆)
+function iflogin(){
+    Net.httpGet('queryAccountInfo').then(res => {
+        console.log(res.responseResult);
+        if (res.responseResult == "1") {
+            rootVM.ifdenglu = 1;
+            console.log("登录状态");
+            initFlowWallet();
+        }else{
+            console.log("未登录");
+            rootVM.ifdenglu = 0;
+        }
+    })
+};
+
+// 分享二维码功能，一般首厅
+// 加类id="qrcode"
+var qrcode = new QRCode(document.getElementById("qrcode"), {
+    width : 120,
+    height : 120,
+    render : ''
+});
+var qrurl = "https://qy.chinaunicom.cn/mobile-h5/Flow_Purse/openRedPkg.html?packageId="+rootVM.packetId;
+console.log(qrurl);
+qrcode.makeCode(qrurl);
+
+//判断是否在微信打开
+function ifOpenWeiXin() {
+    var userAgent = navigator.userAgent.toLowerCase();
+    var isWeixin = "micromessenger" == userAgent.match(/MicroMessenger/i) ? !0 : !1
+    if(isWeixin){
+        rootVM.ifShare=true;
+    }else{
+        rootVM.erweimaShare=true;
+    }
+}
+
+//返回上一页强制刷新
+window.onpageshow=function(e){
+    if(e.persisted) {
+        window.location.reload()
+    }
+};
+
+//window.navigator.userAgent.toLowerCase()用来区分设备和浏览器
+ let ua = window.navigator.userAgent.toLowerCase();
+//通过正则表达式匹配ua中是否含有MicroMessenger字符串
+//micromessenger为微信内嵌的浏览器 
+if(ua.match(/MicroMessenger/i) == 'micromessenger'){
+    return 1;
+}else{
+    return 0;
+}
+
+
+
+// 判断是否为一次进入这个页面
+function chosebeijing(){
+    console.log(111);
+    var params = {actId:'qiqi'};
+    Net.httpGet('sayHello/checkhasclickv2',params).then(res => {
+        console.log(res.has);
+    if(res.has == 0){
+        console.log(222);
+        rootVM.orfirst = true;
+        rootVM.secend = false;
+    }else{
+        
+    }
+})
+}
+
+
+//判断用户是否参与过活动
+let getOrder = function(){
+    let params = {};
+    params.actId = actId;
+    Net.httpGet("/bestvMem/validAct",params).then(function(data){
+        console.log(data);
+        if(data.responseResult == 1){
+            rootVM.showPayWayDiv();
+        }else{
+            if(data.errorMsg.indexOf("系统异常")>=0){
+
+                showOneTips("您的套餐不能参与该活动哦~");
+            }
+            else{
+                if(data.errorMsg.indexOf("您已参加过本活动了")>=0){
+
+                    showOneTips("小主，您已参加过本活动了，请移步“特权中心—卡券包”查看，下月期待您再来哦~");
+                }
+                else{
+
+                    showOneTips(data.errorMsg);
+                }
+            }
+            rootVM.istccshowsev=false;
+        }
+    }).catch(function(){
+        showOneTips("网络太火爆了，请稍后重试~");
+    }).finally(
+
+    );
+}
+
+
+
+//商品查询
+function initActInfo(){
+    //查询是否已参与过活动、用户信息等
+    var params={actId:actId};
+    return Net.httpGet('/activityCommon/queryGoodsByActId',params)
+        .then(function (data) {
+            if(data.success){
+                goodsId=data.goodsInfo.goodsId;
+                return;
+            }
+        });
+}
+
+//生成订单，进行支付
+function doPay() {
+    Helper.showWaitTip('处理中，请稍候...');
+    buildOrder().then(jumpToPayway);
+}
+
+let buildOrder = Lock(function () {
+    var lock = this;
+    var params = {};
+    params.actId = actId;//活动id
+    params.goodsId = goodsId;//商品id
+    params.orderDesc = "秒杀卡";//订单描述
+    params.bkurl = 'https://qy.chinaunicom.cn/mobile-h5/pay/showpayresult-double.html';//支付成功后返回的url路径/绝对
+
+    return Payutils.payv2(params)
+        .then(function (response) {
+            return response;
+        }).finally(function () {
+            lock.release();
+        });
+});
+let jumpToPayway = function (data) {
+    Helper.hideWaitTip();
+    console.log(data);
+    if (data.responseResult == '0') {
+        rootVM.showTip1 = false;
+        rootVM.showTip2 = true;
+        rootVM.btnMsg="关闭";
+        rootVM.message = data.errorMsg;
+        return;
+    } else if (data.responseResult == "1") {
+        rootVM.ifPayFlag = true;
+        if (data.isNeedPay === '1') {
+            //将订单数据传给支付公司
+            $("#payRequestForm").remove();
+            $("body").append(data.form);
+            // return;
+            document.forms['payRequestForm'].submit();
+        } else {
+            // rootVM.ifShowMsgConfirmDiv = true;
+            // rootVM.msgConfirmDivBtn1 = "我知道了";
+            // rootVM.msgConfirmDivBtn2 = "前往查看";
+            // rootVM.msgConfirmDivContent = '恭喜!您已经购买成功，请前往您的卡券包查看~';
+            rootVM.showTip1=false;
+            rootVM.showTip2=true;
+            rootVM.btnMsg="关闭";
+            rootVM.message="购买成功，秒杀活动等着你！";
+        }
+
+    }
+}
+
+ </script>   
+<script type='text/javascript' src='${resRoot}/js/plugin/qrcode.min.js'></script>
+<script type="text/javascript" src="${resRoot}/js/plugin/jquery.qrcode.js"></script>
+</body>
+</html>

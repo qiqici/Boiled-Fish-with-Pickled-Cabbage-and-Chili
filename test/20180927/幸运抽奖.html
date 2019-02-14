@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<style>
+*{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+	.container{
+		margin: 200px auto;
+		width:400px;
+		height: 400px;
+		background: rgba(0,0,0,.2);
+		overflow: hidden;
+	}
+	.one,.two,.three,.four,.five,.six,.seven,.eight,.nine{
+		width: 120px;
+		height: 120px;
+		margin:5px;
+		background: pink;
+	    display: inline-block;
+	}
+	.five{
+		background: #fff;
+	}
+	.selected{
+		background: red;
+	}
+</style>
+<script src="./../jquery.js"></script>
+<body>
+	
+	<div class="container">
+		<li class="one selected"></li>
+		<li class="two"></li>
+		<li class="three"></li>
+		<li class="four"></li>
+		<li class="five"></li>	
+		<li class="six"></li>
+		<li class="seven"></li>
+		<li class="eight"></li>
+		<li class="nine"></li>
+		
+		
+		
+	</div>
+
+<script>
+	;(function(){
+		var bian=18;
+		var huang=0;
+		var timer;
+		console.log(huang);
+		var flag=false;
+
+		var selected=false;
+		var arr=["one","two","three","six","nine","eight","seven","four","five"];
+		
+
+
+		$(".five").on("click",function(){
+			if(flag){
+				return;
+			}
+			
+			timer=setInterval(function(){
+				$("."+arr[huang]).addClass('selected').siblings().removeClass('selected');
+				huang++;
+				if(huang==8){
+					huang=0;
+				}
+			}, 200)
+
+			flag=true;
+
+			setTimeout(function(){
+				clearInterval(timer);
+
+				flag=false;
+				
+			},200*(bian+1));
+
+			console.log(200*(bian+1));
+			
+		})
+
+
+
+	})();
+	
+</script>
+
+	
+</body>
+</html>

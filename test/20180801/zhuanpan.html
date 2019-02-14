@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<style>
+	.pan{
+		width: 600px;
+		height: 600px;
+		background: url("./turntable.png") no-repeat center;
+	}
+	.zhen{
+		position: fixed;
+		top: 189px;
+    	left: 207px;
+		width: 200px;
+		height: 200px;
+		background: url("./btn.png") no-repeat center;
+	}
+</style>
+<script src="../jquery.js"></script>
+<body>
+<div class="pan"></div>
+<div class="zhen"></div>
+<h4>hahah</h4>
+	
+	<script>
+
+	
+	silsile();
+		
+
+	function silsile(){
+		// var $a=num;
+		// var $bb=360-$a;
+		var index=0;
+		$(".zhen").click(function(){	
+		console.log(index);
+		if($(".pan").hasClass('transform')){
+			console.log(111);
+			$(".pan").css("transform","rotate("+360*(index+1)+"deg)");
+			$(".pan").removeClass('transform');
+			$(".pan").css("transition-duration","5s");
+			index++;
+			$(".zhen").trigger("click");
+		}else{
+			$(".pan").css("transform","rotate("+(360*Math.random()+index*360)+"deg)");
+			$(".pan").addClass('transform');
+			console.log(222);
+			$(".pan").css("transition-duration","5s");
+		}
+	})
+	}	
+	
+	
+
+	</script>
+
+</body>
+</html>

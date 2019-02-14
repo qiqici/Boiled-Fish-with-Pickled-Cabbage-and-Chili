@@ -1,0 +1,117 @@
+<html id="root">
+<meta charset="UTF-8">
+<meta name="Iphone-content" content="375"/>
+<meta name="format-detection" content="telephone=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, minimal-ui">
+<title>流量权益</title>
+<link href="${cssRoot}/common.css" rel="stylesheet" type="text/css">
+<link href="${cssRoot}/style.css" rel="stylesheet" type="text/css">
+<!--<link href="${cssRoot}/drawStationery/tencent.css" rel="stylesheet" type="text/css">-->
+<style>
+    #header{
+        display: none;
+    }
+    [v-cloak]{
+        display: none;
+    }
+
+/* 这个标签很重要，一定要记得加 */
+    input {
+        -webkit-user-select: text;
+        -user-select: text;
+        outline: none;
+    }
+/* 这个标签很重要，一定要记得加 */
+
+    *{
+        margin: 0;
+        padding: 0;
+    }
+    .container{
+        background: url('${resRoot}/images/drawStationery/equity/5g.png')  no-repeat;
+        background-size: 100% 100%;
+        width: 100%;
+        height: 42rem;
+        padding-top: 21.3rem;
+    }
+    .getFree{
+        text-align: center;
+    }
+    .rule{
+        background: url('${resRoot}/images/drawStationery/equity/rule-5g.png')  no-repeat;
+        background-size: 100% 100%;
+        width: 92%;
+        margin: 1rem auto;
+        color: #fff;
+        padding: 1.5rem 0.8rem;
+        font-size: 0.7rem;
+    }
+</style>
+<body style="background: #4021b5;">
+
+<div class="container">
+    <div class="getFree" v-on:click="clickToGetFree">
+        <img src="${resRoot}/images/drawStationery/equity/get.png" alt="" style="width: 18rem;">
+    </div>
+    <div class="rule">
+        <h4 style="font-size: 1.3rem;font-weight: normal;padding: 0.3rem 0;">活动规则</h4>
+        <p>1、适用范围：仅限上海联通互联网套餐特邀用户。</p>
+        <p>2、本活动所含流量为国内流量（不含港澳台流量），兑换成功后流量包立即生效，本活动有效期至次月月底，在有效期内每位用户可领取2次，每月限领一次；</p>
+        <p>3、流量包生效以到账短信为准，请在生效当月最后一天23:59:59前使用，到期未使用完流量清零不结转，超出部分流量资费按标准套餐资费执行；</p>
+        <p>4、用户须处于正常可用状态，停机、欠费、黑名单、未实名制登记等特殊状态下，各类流量将无法享用。请用户注意总流量封顶关网限制规则，以免流量受限无法使用。</p>
+    </div>
+</div>
+
+<!--验证码弹窗-->
+<div style="display: none; position:fixed;left:0;top:0;width:100%;height: 100%;background:rgba(0,0,0,0.5);z-index: 2;" v-show="bstShowDiv">
+    <div style="width:90%;margin:25%  auto;">
+        <div style="width:100%;background: #fff;position: relative;">
+            <img src="${resRoot}/images/card_pkg/new_tctop.png" style="width: 100%;display: block;"/>
+            <span style="position: absolute;right: 30px;top: 16px;color: #fff;font-size: 28px;font-style: italic;letter-spacing: 3px;">确认订单</span>
+        </div>
+        <div style="width:100%;font-size: 14px;background: #fff;padding: 6% 0">
+            <div style="padding: 0 5%;color:#666666;display:flex;justify-content: space-between;align-items: center;">
+                <div style="height:2.4rem;width: 55%;">
+                    <input maxlength="6" style="border: none;background: #f1f1f1;box-shadow:none;border-radius:3px;text-indent:10px;line-height:2.4rem;font-size:0.9rem;margin: 0;height:2.4rem;color:#999;padding: 0;width: 100%"  v-model="smsCode" type="text" placeholder="输入验证码">
+                </div>
+                <div style="height: 2.4rem;text-align: center;border-radius: 3px;line-height: 2.4rem;background: rgb(255, 102, 0);color: rgb(255, 255, 255);width: 40%;" id="btn5" v-html="sendcontainer" v-on:click="send()">获取验证码</div>
+                <div style="height: 2.4rem;text-align: center;border-radius: 3px;line-height: 2.4rem;background: gray;color: rgb(255, 255, 255);display: none;width: 40%;" id="btn15" v-text="btn1Msg">已发送(300s)</div>
+            </div>
+            <div v-on:click="toPayConfirm" style=" width: 90%;text-align: center; margin: 1rem auto; color: #fff;background: rgb(255, 102, 0);border-radius: 3px;height: 3rem;line-height: 3rem;">立即兑换</div>
+            <div style="text-align:center;width:100%;color:#f60;font-size:0.9rem;">
+                *为保护您的资产安全，请输入验证码兑换哦~
+            </div>
+        </div>
+        <div style="width:100%;margin-top:20px;" v-on:click="bstPayWayDiv">
+            <img src="../images/flow-wallet/tc-icon_09.png" width="100%"/>
+        </div>
+    </div>
+</div>
+
+<!--提示-->
+<pop-up-confirm v-cloak v-show="ifShowMsgConfirmDiv" v-on:btn1click="clickMsgConfirmDivCloseBtn" v-on:btn2click="clickToQuanIndex" v-on:closeconfirmdivbtnclick="clickMsgConfirmDivCloseBtn">
+    <span slot="title" class="title">温馨提示</span>
+    <p slot="msgHtml" v-html="msgConfirmDivContent"></p>
+    <p slot="btn1-name" v-text="msgConfirmDivBtn1"></p>
+    <p slot="btn2-name" v-text="msgConfirmDivBtn2"></p>
+</pop-up-confirm>
+<pop-up v-cloak v-show="ifShowMsgDiv" v-on:closemsgdiv="clickMsgDivCloseBtn">
+    <p v-text="msgDivContent" style="text-align: center"></p>
+</pop-up>
+
+<div style="display:none;width:100%;height:100%;background:rgba(0,0,0,0.6);position:fixed;top:0;left:0;z-index:9999"  v-show="istccshowsev">
+    <div style="width:80%;margin:40% auto 10px;text-align:center;" >
+        <img src="../images/index_copy/loading2.gif" width="30%" />
+    </div>
+    <div style="width:100%;text-align:center;line-height:1.5rem;color:white;">加载中....</div>
+</div>
+<dimmer v-show="dimmerShowFlag">
+    <span v-html="dimmerShowMsg"></span>
+</dimmer>
+</body>
+<script type='text/javascript' src='${jsRoot}/common.js'></script>
+<script type='text/javascript' src='${resRoot}/js/plugin/jquery.min.js'></script>
+<script type='text/javascript' src='${resRoot}/js/plugin/qrcode.min.js'></script>
+<script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type='text/javascript' src='${jsRoot}/drawStationery/5g.js' ></script>
+</html>

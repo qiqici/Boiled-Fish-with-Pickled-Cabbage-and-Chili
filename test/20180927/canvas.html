@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>canvas</title>
+</head>
+<body>
+
+<script>
+	var dom=$("#boxcon");
+	var width=dom.width();
+	var height=dom.height();
+	var type="png";
+	var scaleBy=4;
+	var canvas=document.createElement('canvas');
+	canvas.width=width*scaleBy;
+	canvas.height=height*scaleBy+35;
+	canvas.style.width=width*scaleBy+'px';
+	canvas.style.height=height*scaleBy+'px';
+	var context=canvas.getContext('2d');
+	context.font="Microsoft YaHei";
+	html2canvas(dom[0],{
+		canvas:canvas,
+		useCORS:true,
+		onrendered:function(canvas){
+			var all_width=$(window).width();
+			$("#boxcon").css("display","none");
+			$("boxconimg").append(Canvas2Image.convertToImage(canvas,width*scaleBy,height*scaleBy,type));
+			$("boxconimg img").css("width",width+"px").css("height",height+"px");
+			that.istccshowsev=flase;
+			$("#fatherbtn").hide();
+		}
+	})
+</script>
+</body>
+</html>
